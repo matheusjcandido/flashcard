@@ -61,3 +61,10 @@ Feel free to customize and expand upon to better suit your project's needs.
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ---
+## Screenshots
+Here are some screenshots of the flashcard app:
+
+![Add Flashcard](images/add.png)
+![Review Flashcards](images/review.png)
+![Search Flashcards](images/search.png)
+![View All Flashcards](images/view_all.png)
