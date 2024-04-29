@@ -54,14 +54,10 @@ The CSS styles used in the app are inspired by [this repository](https://github.
 
 Contributions are welcome! If you have any suggestions, feature requests, or bug reports, please open an issue or submit a pull request.
 
+Feel free to customize and expand upon to better suit your project's needs.
+
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-Feel free to customize and expand upon to better suit your project's needs.
-
-PRs are welcome! If you fine any mistakes or have any clever ideas, feel free to include them in your PR.
-
-Let's make this project even more awesome together!
