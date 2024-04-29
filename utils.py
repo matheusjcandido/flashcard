@@ -123,6 +123,11 @@ def search(text_search: str, df: pd.DataFrame) -> Callable:
     return search_df
 
 
+@st.cache_data(ttl=3600)
+def convert_df(df):
+    return df.to_csv().encode("utf-8")
+
+
 def view_flashcards(df):
     if not df.empty:
         df[TAGS] = df[TAGS].apply(lambda x: x.split(",") if isinstance(x, str) else x)
@@ -131,5 +136,12 @@ def view_flashcards(df):
             use_container_width=True,
             column_order=[QUESTION, ANSWER, ID, DATE_ADDED, NEXT_APPEARANCE, TAGS],
         )
+        st.download_button(
+            label="Download Flashcards",
+            data=convert_df(df),
+            file_name="flashcards.csv",
+            mime="text/csv",
+        )
+        st.__cached__
     else:
         st.write("No flashcards available.")
