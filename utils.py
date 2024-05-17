@@ -20,11 +20,13 @@ DEFAULT_TAGS = [
     "dbms",
     "ds/algo",
     "english",
+    "linux",
     "ml/dl",
     "os",
     "personal",
     "python",
     "other",
+    "vocab",
 ]
 
 

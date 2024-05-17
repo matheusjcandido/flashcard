@@ -105,7 +105,7 @@ with tab1:
 with tab2:
     with st.form("add_flashcard_form", clear_on_submit=True):
         question = st.text_input("Question")
-        answer = st.text_input("Answer")
+        answer = st.text_area("Answer")
         tags = st.multiselect("Tags", DEFAULT_TAGS, default=DEFAULT_TAGS[-1])
         submit_button = st.form_submit_button("Add Flashcard")
         if submit_button:
