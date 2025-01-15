@@ -1,11 +1,28 @@
 "id","question","answer","date_added","next_appearance","tags"
-"1","boast","brag","2024-05-15 10:08:14.862972","2024-05-18 12:10:22.108331","vocab"
-"2","find command","find `-name|-iname`, `-type` f|d, `-size` +|-size, `-exec`, (`-and`, `-or`, `!`)","2024-05-15 12:55:46.517619","2024-05-18 12:10:25.740675","linux"
-"3","pushover","a person who is easy to overcome or influence","2024-05-17 12:17:21.327270","2024-05-16 12:17:21.327270","vocab"
-"4","talk through","discuss something thoroughly","2024-05-17 12:18:00.626479","2024-05-16 12:18:00.626479","vocab"
-"5","retaliate","( fight | strike | hit ) back. make an attack in return for a similar attack","2024-05-17 12:19:09.517064","2024-05-16 12:19:09.517064","vocab"
-"6","provoke","deliberately make someone angry or annoyed","2024-05-17 12:20:13.325973","2024-05-16 12:20:13.325973","vocab"
-"7","hurl","throw | fling","2024-05-17 12:20:48.693637","2024-05-16 12:20:48.693637","vocab"
-"8","fling","throw","2024-05-17 12:20:51.943404","2024-05-16 12:20:51.943404","vocab"
-"9","ick","used to express disgust","2024-05-17 12:21:11.260128","2024-05-16 12:21:11.260128","vocab"
-"10","aversion","a strong dislike","2024-05-17 12:21:40.382937","2024-05-16 12:21:40.382937","vocab"
+"1","boast","brag","2024-05-15 10:08:14.862972","2025-01-14 10:36:01.534710","vocab"
+"2","find command","find `-name|-iname`, `-type` f|d, `-size` +|-size, `-exec`, (`-and`, `-or`, `!`)","2024-05-15 12:55:46.517619","2024-08-20 11:30:12.880695","linux"
+"3","pushover","a person who is easy to overcome or influence","2024-05-17 12:17:21.327270","2024-08-20 11:30:21.296984","vocab"
+"4","talk through","discuss something thoroughly","2024-05-17 12:18:00.626479","2024-08-20 11:30:23.681384","vocab"
+"5","retaliate","( fight | strike | hit ) back. make an attack in return for a similar attack","2024-05-17 12:19:09.517064","2024-08-21 11:30:28.581903","vocab"
+"6","provoke","deliberately make someone angry or annoyed","2024-05-17 12:20:13.325973","2024-08-20 11:30:34.491965","vocab"
+"7","hurl","throw | fling","2024-05-17 12:20:48.693637","2024-08-20 11:30:52.450092","vocab"
+"8","fling","throw","2024-05-17 12:20:51.943404","2024-08-20 11:30:55.683674","vocab"
+"9","ick","used to express disgust","2024-05-17 12:21:11.260128","2024-08-20 11:30:57.864616","vocab"
+"10","aversion","a strong dislike","2024-05-17 12:21:40.382937","2024-08-20 11:31:02.561417","vocab"
+"11","affluent","Having a lot of money or owning a lot of things:
+Ex: We live in an affluent neighborhood","2024-08-19 11:31:50.410384","2024-08-18 11:31:50.410384","vocab"
+"12","adversity","difficult or problems or misfortune
+Ex: showing courage in the face of adversity","2024-08-19 11:35:04.166105","2024-08-18 11:35:04.166105","vocab"
+"13","salient","most noticeable or important
+
+Ex: The article presented the salient facts of the dispute clearly and concisely","2024-08-19 12:14:16.366607","2024-08-18 12:14:16.366607","vocab"
+"14","credible","able to be believed / convinced / acceptable
+Ex: a credible source","2024-08-19 12:15:41.433671","2024-08-18 12:15:41.433671","vocab"
+"15"," self-righteous","believing that you are always right and other people are wrong, so that you are better than other people.","2024-08-19 12:19:20.701512","2024-08-18 12:19:20.701512","vocab"
+"16","trivialize","to make something less important that it really is","2024-08-19 12:19:42.967301","2024-08-18 12:19:42.967301","vocab"
+"17","moonlighting","the act of working at an extra job, especially without telling your main employer","2024-08-19 12:23:36.058158","2024-08-18 12:23:36.058158","vocab"
+"18","trivial","of little importance / not worth considering","2024-08-19 12:24:55.641942","2024-08-18 12:24:55.641942","vocab"
+"19","humility","the quality of not thinking that you are better than the other people","2024-08-19 12:25:45.307352","2024-08-18 12:25:45.307352","vocab"
+"20","contentment","a feeling of happy satisfaction","2024-08-19 12:26:14.457458","2024-08-18 12:26:14.457458","vocab"
+"21","entitlement","the official right to have something / to do something
+Ex: pension/holiday entitlements","2024-08-19 12:29:43.684697","2024-08-18 12:29:43.684697","vocab"
