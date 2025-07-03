@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Callable
 
 import pandas as pd
@@ -31,31 +31,30 @@ DEFAULT_TAGS = [
 
 
 def get_empty_df():
-    return pd.DataFrame(columns=[ID, QUESTION, ANSWER, DATE_ADDED])
+    return pd.DataFrame(columns=[ID, QUESTION, ANSWER, DATE_ADDED, NEXT_APPEARANCE, TAGS])
 
 
 def save_flashcards(flashcards_df: pd.DataFrame):
-    flashcards_df[TAGS] = flashcards_df[TAGS].apply(
-        lambda x: ",".join(t.lower() for t in x)
-    )
-    flashcards_df.to_csv(FLASHCARDS_CSV, index=False, quotechar='"', quoting=1)
+    # Mantem a lógica de salvar para o agendamento
+    if not flashcards_df.empty:
+        flashcards_df.to_csv("flashcards_symbols.csv", index=False)
 
 
 def load_all_flashcards():
-    if os.path.exists(FLASHCARDS_CSV):
-        df = pd.read_csv(
-            FLASHCARDS_CSV,
-            parse_dates=[DATE_ADDED, NEXT_APPEARANCE],
-        )
-        df = df.drop_duplicates(subset=QUESTION, keep="first")
-        df[TAGS] = df[TAGS].apply(lambda x: x.split(",") if isinstance(x, str) else x)
+    if os.path.exists("simbolos.csv"):
+        df = pd.read_csv("simbolos.csv", header=None, names=[ANSWER])
+        df[ID] = df.index + 1
+        df[QUESTION] = df[ID].apply(lambda i: f"images/{i}.png")
+        df[DATE_ADDED] = pd.to_datetime(datetime.now())
+        df[NEXT_APPEARANCE] = pd.to_datetime(datetime.now() - timedelta(days=1))
+        df[TAGS] = "simbolos"
         return df
     else:
         return get_empty_df()
 
 
 def concat_df(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
-    # If any of the DataFrames is empty, return the other
+    # Se um dos DataFrames estiver vazio, retorna o outro
     if df1.empty:
         return df2
     elif df2.empty:
@@ -102,13 +101,13 @@ def get_question():
 def search(text_search: str, df: pd.DataFrame) -> Callable:
     def search_df():
         if df.empty:
-            st.warning("The DataFrame is empty. No data to search.")
+            st.warning("O DataFrame está vazio. Não há dados para pesquisar.")
             return
 
-        search_items = df[QUESTION].str.contains(text_search, case=False, na=False)
+        search_items = df[ANSWER].str.contains(text_search, case=False, na=False)
         matching_rows = df[search_items]
         if matching_rows.empty:
-            st.info(f"No results found for '{text_search}'.")
+            st.info(f"Nenhum resultado encontrado para '{text_search}'.")
             return
 
         for n_row, row in matching_rows.reset_index().iterrows():
@@ -117,9 +116,9 @@ def search(text_search: str, df: pd.DataFrame) -> Callable:
                 st.write("---")
                 cols = st.columns(N_CARDS_PER_ROW, gap="large")
             with cols[n_row % N_CARDS_PER_ROW]:
-                st.caption(f"Question {int(row[ID])}")
-                st.markdown(f"**{row[QUESTION].strip()}**")
-                with st.expander("Answer"):
+                st.caption(f"Símbolo {int(row[ID])}")
+                st.image(row[QUESTION])
+                with st.expander("Resposta"):
                     st.markdown(f"*{row[ANSWER].strip()}*")
 
     return search_df
@@ -132,18 +131,17 @@ def convert_df(df):
 
 def view_flashcards(df):
     if not df.empty:
-        df[TAGS] = df[TAGS].apply(lambda x: x.split(",") if isinstance(x, str) else x)
         st.dataframe(
             df,
             use_container_width=True,
             column_order=[QUESTION, ANSWER, ID, DATE_ADDED, NEXT_APPEARANCE, TAGS],
         )
         st.download_button(
-            label="Download Flashcards",
+            label="Baixar Flashcards",
             data=convert_df(df),
             file_name="flashcards.csv",
             mime="text/csv",
         )
         st.__cached__
     else:
-        st.write("No flashcards available.")
+        st.write("Nenhum flashcard disponível.")
