@@ -1,4 +1,5 @@
 import os
+import random
 from datetime import datetime, timedelta
 from typing import Callable
 
@@ -72,6 +73,43 @@ def get_due_flashcards(df: pd.DataFrame) -> pd.DataFrame:
         return get_empty_df()
 
 
+def initialize_question_queue():
+    """Inicializa uma fila de questões em ordem aleatória"""
+    due_questions = get_due_flashcards(st.session_state.flashcards_df)
+    if not due_questions.empty:
+        # Criar uma lista de IDs em ordem aleatória
+        question_ids = due_questions[ID].tolist()
+        random.shuffle(question_ids)
+        st.session_state.question_queue = question_ids
+    else:
+        st.session_state.question_queue = []
+
+
+def get_next_question():
+    """Retorna a próxima questão da fila randomizada"""
+    # Se a fila estiver vazia, reinicializar
+    if not hasattr(st.session_state, 'question_queue') or len(st.session_state.question_queue) == 0:
+        initialize_question_queue()
+    
+    # Se ainda estiver vazia após inicialização, não há questões devido
+    if len(st.session_state.question_queue) == 0:
+        return None
+    
+    # Pegar o próximo ID da fila
+    next_id = st.session_state.question_queue[0]
+    
+    # Buscar a linha correspondente no DataFrame
+    df = st.session_state.flashcards_df
+    matching_rows = df[df[ID] == next_id]
+    
+    if not matching_rows.empty:
+        return matching_rows.iloc[0]
+    else:
+        # Se por algum motivo o ID não for encontrado, remover da fila e tentar o próximo
+        st.session_state.question_queue.pop(0)
+        return get_next_question() if len(st.session_state.question_queue) > 0 else None
+
+
 def prepare_flashcard_df(
     question: str,
     answer: str,
@@ -95,8 +133,11 @@ def prepare_flashcard_df(
 
 
 def get_question():
+    """Função mantida para compatibilidade - usa a nova implementação"""
     due_questions = get_due_flashcards(st.session_state.flashcards_df)
-    for i, row in due_questions.iterrows():
+    # Randomizar a ordem a cada chamada
+    due_questions_shuffled = due_questions.sample(frac=1).reset_index(drop=True) if not due_questions.empty else due_questions
+    for i, row in due_questions_shuffled.iterrows():
         yield i, row
 
 
