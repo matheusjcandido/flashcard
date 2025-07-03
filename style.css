@@ -154,3 +154,49 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
+
+/* Estilo para métricas */
+.metric-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.metric-container:hover {
+    transform: translateY(-2px);
+}
+
+/* Estilo para a barra de progresso */
+.stProgress > div > div > div {
+    background: linear-gradient(90deg, #00c9ff 0%, #92fe9d 100%);
+    border-radius: 10px;
+}
+
+/* Estilo para estatísticas finais */
+.final-stats {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Botão de nova sessão */
+.stButton > button[data-testid="baseButton-primary"] {
+    background: linear-gradient(45deg, #ff6b6b 0%, #ee5a24 100%);
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.stButton > button[data-testid="baseButton-primary"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
