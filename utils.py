@@ -67,31 +67,33 @@ def concat_df(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_due_flashcards(df: pd.DataFrame) -> pd.DataFrame:
+    # Retorna TODOS os flashcards para praticar todos os 84 símbolos a cada sessão
     if len(df) > 0:
-        return df[df[NEXT_APPEARANCE] <= datetime.now()]
+        return df.copy()  # Retorna todos os flashcards, não apenas os "due"
     else:
         return get_empty_df()
 
 
 def initialize_question_queue():
-    """Inicializa uma fila de questões em ordem aleatória"""
-    due_questions = get_due_flashcards(st.session_state.flashcards_df)
-    if not due_questions.empty:
-        # Criar uma lista de IDs em ordem aleatória
-        question_ids = due_questions[ID].tolist()
+    """Inicializa uma fila de questões em ordem aleatória com TODOS os flashcards"""
+    all_questions = st.session_state.flashcards_df
+    if not all_questions.empty:
+        # Criar uma lista de IDs em ordem aleatória com TODOS os flashcards
+        question_ids = all_questions[ID].tolist()
         random.shuffle(question_ids)
         st.session_state.question_queue = question_ids
+        print(f"Inicializada fila com {len(question_ids)} questões")  # Debug
     else:
         st.session_state.question_queue = []
 
 
 def get_next_question():
     """Retorna a próxima questão da fila randomizada"""
-    # Se a fila estiver vazia, reinicializar
+    # Se a fila estiver vazia, reinicializar com TODOS os flashcards
     if not hasattr(st.session_state, 'question_queue') or len(st.session_state.question_queue) == 0:
         initialize_question_queue()
     
-    # Se ainda estiver vazia após inicialização, não há questões devido
+    # Se ainda estiver vazia após inicialização, não há questões
     if len(st.session_state.question_queue) == 0:
         return None
     
