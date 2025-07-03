@@ -5,7 +5,8 @@ from typing import Callable
 import pandas as pd
 import streamlit as st
 
-FLASHCARDS_CSV = "flashcards.csv"
+DATABASE_CSV = "database.csv"
+FLASHCARDS_SYMBOLS_CSV = "flashcards_symbols.csv"
 
 ID = "id"
 QUESTION = "question"
@@ -15,19 +16,6 @@ NEXT_APPEARANCE = "next_appearance"
 TAGS = "tags"
 
 N_CARDS_PER_ROW = 2
-DEFAULT_TAGS = [
-    "cs",
-    "dbms",
-    "ds/algo",
-    "english",
-    "linux",
-    "ml/dl",
-    "os",
-    "personal",
-    "python",
-    "other",
-    "vocab",
-]
 
 
 def get_empty_df():
@@ -35,19 +23,33 @@ def get_empty_df():
 
 
 def save_flashcards(flashcards_df: pd.DataFrame):
-    # Mantem a lógica de salvar para o agendamento
+    # Salva o progresso dos flashcards com as datas de próxima aparição
     if not flashcards_df.empty:
-        flashcards_df.to_csv("flashcards_symbols.csv", index=False)
+        flashcards_df.to_csv(FLASHCARDS_SYMBOLS_CSV, index=False)
 
 
 def load_all_flashcards():
-    if os.path.exists("simbolos.csv"):
-        df = pd.read_csv("simbolos.csv", header=None, names=[ANSWER])
+    # Carrega a base de dados das imagens e denominações
+    if os.path.exists(DATABASE_CSV):
+        df = pd.read_csv(DATABASE_CSV)
         df[ID] = df.index + 1
-        df[QUESTION] = df[ID].apply(lambda i: f"images/{i}.png")
         df[DATE_ADDED] = pd.to_datetime(datetime.now())
         df[NEXT_APPEARANCE] = pd.to_datetime(datetime.now() - timedelta(days=1))
         df[TAGS] = "simbolos"
+        
+        # Se existe um arquivo de progresso, carrega as datas de próxima aparição
+        if os.path.exists(FLASHCARDS_SYMBOLS_CSV):
+            progress_df = pd.read_csv(FLASHCARDS_SYMBOLS_CSV)
+            progress_df[DATE_ADDED] = pd.to_datetime(progress_df[DATE_ADDED])
+            progress_df[NEXT_APPEARANCE] = pd.to_datetime(progress_df[NEXT_APPEARANCE])
+            
+            # Atualiza as datas de próxima aparição baseado no progresso salvo
+            for _, progress_row in progress_df.iterrows():
+                mask = df[ID] == progress_row[ID]
+                if mask.any():
+                    df.loc[mask, NEXT_APPEARANCE] = progress_row[NEXT_APPEARANCE]
+                    df.loc[mask, DATE_ADDED] = progress_row[DATE_ADDED]
+        
         return df
     else:
         return get_empty_df()
@@ -142,6 +144,5 @@ def view_flashcards(df):
             file_name="flashcards.csv",
             mime="text/csv",
         )
-        st.__cached__
     else:
         st.write("Nenhum flashcard disponível.")
