@@ -85,12 +85,23 @@ def reset_answer_state():
 
 def update_session_stats(difficulty: str, symbol_id: int):
     """Atualiza as estatísticas da sessão"""
-    st.session_state.session_stats["answered"] += 1
-    st.session_state.session_stats[difficulty] += 1
-    
-    # Se marcado como difícil, adicionar à lista de símbolos difíceis desta sessão
-    if difficulty == "hard" and symbol_id not in st.session_state.hard_symbols_this_session:
-        st.session_state.hard_symbols_this_session.append(symbol_id)
+    try:
+        st.session_state.session_stats["answered"] += 1
+        st.session_state.session_stats[difficulty] += 1
+        
+        # Se marcado como difícil, adicionar à lista de símbolos difíceis desta sessão
+        if difficulty == "hard" and symbol_id not in st.session_state.hard_symbols_this_session:
+            st.session_state.hard_symbols_this_session.append(symbol_id)
+    except Exception as e:
+        st.error(f"Erro ao atualizar estatísticas: {str(e)}")
+        # Reinicializar estatísticas se houver erro
+        st.session_state.session_stats = {
+            "total_questions": st.session_state.total_due_questions,
+            "answered": 1,
+            "easy": 1 if difficulty == "easy" else 0,
+            "medium": 1 if difficulty == "medium" else 0,
+            "hard": 1 if difficulty == "hard" else 0
+        }
 
 
 def reset_session():
@@ -169,10 +180,19 @@ st.markdown("---")
 
 # Mostrar barra de progresso e estatísticas
 if st.session_state.total_due_questions > 0:
-    progress = st.session_state.session_stats["answered"] / st.session_state.session_stats["total_questions"]
+    # Calcular progresso com validação
+    answered = st.session_state.session_stats["answered"]
+    total = st.session_state.session_stats["total_questions"]
+    
+    if total > 0:
+        progress = answered / total
+        # Garantir que o progresso esteja entre 0 e 1
+        progress = max(0.0, min(1.0, progress))
+    else:
+        progress = 0.0
     
     # Barra de progresso
-    st.progress(progress, text=f"Progresso: {st.session_state.session_stats['answered']}/{st.session_state.session_stats['total_questions']} símbolos")
+    st.progress(progress, text=f"Progresso: {answered}/{total} símbolos")
     
     # Estatísticas em tempo real
     col1, col2, col3, col4 = st.columns(4)
@@ -247,81 +267,105 @@ try:
             st.rerun()
     else:
         # Sessão completa - mostrar estatísticas finais
-        st.balloons()
-        st.success("🎉 Parabéns! Você completou todos os flashcards!", icon="🏆")
-        
-        # Estatísticas detalhadas finais
-        st.markdown("## 📊 Relatório da Sessão")
-        
-        total_answered = st.session_state.session_stats["answered"]
-        easy_count = st.session_state.session_stats["easy"]
-        medium_count = st.session_state.session_stats["medium"]
-        hard_count = st.session_state.session_stats["hard"]
-        
-        # Métricas principais
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Total Respondidos", total_answered)
-        with col2:
-            easy_pct = (easy_count / total_answered * 100) if total_answered > 0 else 0
-            st.metric("😊 Fácil", f"{easy_count} ({easy_pct:.1f}%)")
-        with col3:
-            medium_pct = (medium_count / total_answered * 100) if total_answered > 0 else 0
-            st.metric("😐 Médio", f"{medium_count} ({medium_pct:.1f}%)")
-        with col4:
-            hard_pct = (hard_count / total_answered * 100) if total_answered > 0 else 0
-            st.metric("😰 Difícil", f"{hard_count} ({hard_pct:.1f}%)")
-        
-        # Gráfico de barras das estatísticas
-        chart_data = pd.DataFrame({
-            'Dificuldade': ['Fácil', 'Médio', 'Difícil'],
-            'Quantidade': [easy_count, medium_count, hard_count],
-            'Percentual': [easy_pct, medium_pct, hard_pct]
-        })
-        
-        st.markdown("### 📈 Distribuição das Respostas")
-        st.bar_chart(chart_data.set_index('Dificuldade')['Quantidade'])
-        
-        # Análise do desempenho
-        st.markdown("### 🎯 Análise do Desempenho")
-        
-        if easy_pct >= 70:
-            st.success("🌟 Excelente! Você domina bem os símbolos de segurança!")
-        elif easy_pct >= 50:
-            st.info("👍 Bom trabalho! Continue praticando para melhorar ainda mais.")
-        elif hard_pct >= 50:
-            st.warning("📚 Foque mais no estudo - muitos símbolos precisam de mais atenção.")
-        else:
-            st.info("💪 Continue praticando! A repetição é a chave do aprendizado.")
-        
-        # Informação sobre símbolos difíceis
-        if len(st.session_state.hard_symbols_this_session) > 0:
-            st.markdown("### 🎯 Símbolos que Precisam de Mais Atenção")
-            st.warning(f"Você marcou **{len(st.session_state.hard_symbols_this_session)} símbolos** como difíceis nesta sessão.")
-            st.info("💡 **Dica:** Pratique apenas esses símbolos para melhorar mais rapidamente!")
-        
-        # Botões para próximas ações
-        st.markdown("---")
-        st.markdown("### 🚀 Próximos Passos")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Botão para estudar apenas os difíceis (só aparece se houver símbolos difíceis)
-            if len(st.session_state.hard_symbols_this_session) > 0:
-                if st.button("🎯 Estudar Apenas os Difíceis", use_container_width=True, key="hard_only_btn", type="secondary"):
-                    start_hard_only_session()
-                    st.rerun()
+        try:
+            st.balloons()
+            st.success("🎉 Parabéns! Você completou todos os flashcards!", icon="🏆")
+            
+            # Estatísticas detalhadas finais
+            st.markdown("## 📊 Relatório da Sessão")
+            
+            # Validar valores das estatísticas
+            total_answered = max(1, st.session_state.session_stats.get("answered", 1))  # Evitar divisão por zero
+            easy_count = st.session_state.session_stats.get("easy", 0)
+            medium_count = st.session_state.session_stats.get("medium", 0)
+            hard_count = st.session_state.session_stats.get("hard", 0)
+            
+            # Garantir que os valores sejam consistentes
+            if easy_count + medium_count + hard_count != total_answered:
+                # Se houver inconsistência, ajustar
+                total_answered = easy_count + medium_count + hard_count
+                if total_answered == 0:
+                    total_answered = 1
+            
+            # Métricas principais
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Respondidos", total_answered)
+            with col2:
+                easy_pct = (easy_count / total_answered * 100) if total_answered > 0 else 0
+                easy_pct = max(0, min(100, easy_pct))  # Garantir que esteja entre 0 e 100
+                st.metric("😊 Fácil", f"{easy_count} ({easy_pct:.1f}%)")
+            with col3:
+                medium_pct = (medium_count / total_answered * 100) if total_answered > 0 else 0
+                medium_pct = max(0, min(100, medium_pct))  # Garantir que esteja entre 0 e 100
+                st.metric("😐 Médio", f"{medium_count} ({medium_pct:.1f}%)")
+            with col4:
+                hard_pct = (hard_count / total_answered * 100) if total_answered > 0 else 0
+                hard_pct = max(0, min(100, hard_pct))  # Garantir que esteja entre 0 e 100
+                st.metric("😰 Difícil", f"{hard_count} ({hard_pct:.1f}%)")
+            
+            # Gráfico de barras das estatísticas
+            chart_data = pd.DataFrame({
+                'Dificuldade': ['Fácil', 'Médio', 'Difícil'],
+                'Quantidade': [easy_count, medium_count, hard_count],
+                'Percentual': [easy_pct, medium_pct, hard_pct]
+            })
+            
+            st.markdown("### 📈 Distribuição das Respostas")
+            if chart_data['Quantidade'].sum() > 0:  # Só mostrar gráfico se houver dados
+                st.bar_chart(chart_data.set_index('Dificuldade')['Quantidade'])
+            
+            # Análise do desempenho
+            st.markdown("### 🎯 Análise do Desempenho")
+            
+            if easy_pct >= 70:
+                st.success("🌟 Excelente! Você domina bem os símbolos de segurança!")
+            elif easy_pct >= 50:
+                st.info("👍 Bom trabalho! Continue praticando para melhorar ainda mais.")
+            elif hard_pct >= 50:
+                st.warning("📚 Foque mais no estudo - muitos símbolos precisam de mais atenção.")
             else:
-                st.info("🎉 Nenhum símbolo foi marcado como difícil!")
-        
-        with col2:
-            # Botão para nova sessão completa
-            if st.button("🔄 Iniciar Nova Sessão Completa", use_container_width=True, key="new_session_btn", type="primary"):
-                reset_session()
-                st.rerun()
+                st.info("💪 Continue praticando! A repetição é a chave do aprendizado.")
+            
+            # Informação sobre símbolos difíceis
+            if len(st.session_state.hard_symbols_this_session) > 0:
+                st.markdown("### 🎯 Símbolos que Precisam de Mais Atenção")
+                st.warning(f"Você marcou **{len(st.session_state.hard_symbols_this_session)} símbolos** como difíceis nesta sessão.")
+                st.info("💡 **Dica:** Pratique apenas esses símbolos para melhorar mais rapidamente!")
+            
+            # Botões para próximas ações
+            st.markdown("---")
+            st.markdown("### 🚀 Próximos Passos")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Botão para estudar apenas os difíceis (só aparece se houver símbolos difíceis)
+                if len(st.session_state.hard_symbols_this_session) > 0:
+                    if st.button("🎯 Estudar Apenas os Difíceis", use_container_width=True, key="hard_only_btn", type="secondary"):
+                        start_hard_only_session()
+                        st.rerun()
+                else:
+                    st.info("🎉 Nenhum símbolo foi marcado como difícil!")
+            
+            with col2:
+                # Botão para nova sessão completa
+                if st.button("🔄 Iniciar Nova Sessão Completa", use_container_width=True, key="new_session_btn", type="primary"):
+                    reset_session()
+                    st.rerun()
+                    
+        except Exception as e:
+            st.error("Erro ao gerar relatório final. Reiniciando sessão...")
+            reset_session()
+            st.rerun()
             
 except FileNotFoundError:
     st.error("Erro: Verifique se as imagens estão na pasta 'images' e se o arquivo 'database.csv' está no diretório correto.")
 except Exception as e:
     st.error(f"Erro ao carregar flashcard: {str(e)}")
+    st.info("Tentando reiniciar a sessão...")
+    try:
+        reset_session()
+        st.rerun()
+    except:
+        st.error("Erro crítico. Recarregue a página.")
