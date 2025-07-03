@@ -5,6 +5,7 @@ import streamlit as st
 
 from utils import (
     ANSWER,
+    DATE_ADDED,
     ID,
     NEXT_APPEARANCE,
     QUESTION,
@@ -81,7 +82,9 @@ with tab1:
     except StopIteration:
         st.info("Parabéns! Você completou todos os flashcards. Bom trabalho!", icon="🙌")
     except FileNotFoundError:
-        st.error("Erro: Verifique se as imagens estão na pasta 'images' e se o arquivo 'simbolos.csv' está no diretório correto.")
+        st.error("Erro: Verifique se as imagens estão na pasta 'images' e se o arquivo 'database.csv' está no diretório correto.")
+    except Exception as e:
+        st.error(f"Erro ao carregar flashcard: {str(e)}")
 
 
 with tab2:
