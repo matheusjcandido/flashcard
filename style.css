@@ -1,10 +1,6 @@
 body {
-
     background-color: #1b202c;
-
 }
-  
-
 
 /* center the blockquote in the page */
 .blockquote-wrapper {
@@ -65,24 +61,19 @@ body {
 }
 
 /* increase header size after 600px */
-
 @media all and (min-width: 600px) {
     .blockquote h1 {
         /*    font-size: 3rem;    */
         line-height: 1.2;
     }
-
 }
 
 /* decrease header size below 450px */
-
 @media all and (max-width: 450px) {
     .blockquote h1 {
         font-size: 2rem;
     }
-
 }
-
 
 /* Blockquote subheader */
 .blockquote h4 {
@@ -98,20 +89,68 @@ body {
     padding-left: 12px;
 }
 
-
 .blockquote h4:first-letter {
     margin-left: -12px;
 }
 
+/* Estilo melhorado para a área de resposta */
 .answer {
-    border: 3px solid #202534;
-    /* background-color: #000000; */
-    border-radius: 5px;
-    /* background: linear-gradient(0deg, #030001 0%, #1c0101 50%); */
+    border: 3px solid #4CAF50;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 10px;
     padding: 20px;
     font-size: 1.25rem;
+    margin: 15px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in;
 }
 
 .answer p {
     font-size: 1.25rem;
+    color: #ffffff;
+    margin: 0;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Animação para a resposta aparecer */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilo customizado para o botão de mostrar resposta */
+.stButton > button[kind="secondary"] {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stButton > button[kind="secondary"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo para os botões de dificuldade */
+.stButton > button[kind="primary"] {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stButton > button[kind="primary"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
