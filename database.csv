@@ -1,0 +1,85 @@
+question,answer
+images/1_agua.png,Água
+images/2_espuma.png,Espuma
+images/3_agua_aditivo.png,Água com aditivo a ser definido na legenda da planta
+images/4_seco.png,Seco (a ser alimentado com agente extintor)
+images/5_po_bc.png,Pó para extinção do fogo classes Be C
+images/6_po_abc.png,"Pó para extinção de fogo classes A, B e C "
+images/7_po_d.png,Pó para extinção de fogo classes D
+images/8_halon.png,Halon
+images/9_co2.png,Dióxido de carbono
+images/10_extintor_portatil.png,Extintor de incêndio portátil
+images/11_extintor_rodas.png,Extintor de incêndio sobre rodas
+images/12_protecao_total.png,Proteção total de um ambiente por um sistema fixo de extinção de incêndio
+images/13_protecao_localizada.png,Proteção localizada por um sistema fixo de extinção de incêndio
+images/14_tubulacao.png,Tubulação de incêndio
+images/15_outros.png,Outros equipamentos de combate a incêndio
+images/16_extintor_agua.png,Extintor portátil - Carga d' água
+images/17_extintor_espuma.png,Extintor portátil - Carga de espuma mecânica
+images/18_extintor_co2.png,Extintor portátil - Carga de dióxido de carbono
+images/19_extintor_bc.png,Extintor portátil - Carga de pó BC
+images/20_extintor_abc.png,Extintor portátil - Carga de pó ABC
+images/21_extintor_d.png,Extintor portátil - Carga de pó D
+images/22_extintor_rodas_agua.png,Extintor sobre rodas - Carga d' água
+images/23_extintor_rodas_espuma.png,Extintor sobre rodas Carga de espuma mecânica
+images/24_extintor_rodas_co2.png,Extintor sobre rodas Carga de dióxido de carbono
+images/25_extintor_rodas_bc.png,Extintor sobre rodas Carga de pó BC
+images/26_extintor_rodas_abc.png,Extintor sobre rodas Carga de pó ABC
+images/27_extintor_rodas_d.png,Extintor sobre rodas - Carga de pó D
+images/28_hidrante_simples.png,Hidrante simples
+images/29_hidrante_duplo.png,Hidrante duplo
+images/30_hidrante_coluna.png,Hidrante urbano de coluna
+images/31_hidrante_subterraneo.png,Hidrante urbano subterrâneo
+images/32_mangotinho.png,Mangotinho
+images/33_tubulacao_hidrantes.png,Tubulação de rede de hidrantes
+images/34_registro_recalque.png,Registro de recalque sem válvula de retenção
+images/35_acionador_bomba.png,Acionador de bomba de incêndio (botoeira tipo liga)
+images/36_bomba.png,Bomba de incêndio
+images/37_reserva.png,Reserva de incêndio
+images/38_sirene.png,Avisador sonoro tipo sirene
+images/39_auto_falante.png,Avisador sonoro tipo auto-falante
+images/40_visual.png,Avisador visual
+images/41_gongo.png,Avisador sonoro tipo gongo
+images/42_detector_calor.png,Detector de calor pontual
+images/43_detector_fumaca.png,Detector de fumaça pontual
+images/44_detector_chama.png,Detector de chamas pontual
+images/45_detector_gas.png,Detector de gás pontual
+images/46_acionador.png,Acionador manual do sistema de detecção e alarme
+images/47_central.png,Central de detecção e alarme
+images/48_baterias.png,Baterias do sistema de detecção e alarme
+images/49_painel.png,Painel repetidor do sistema
+images/50_telefone.png,Telefone de emergência / interfone
+images/51_iluminacao.png,Ponto de iluminação de emergência
+images/52_farolete.png,Ponto de iluminação de emergência (tipo farolete)
+images/53_baterias_iluminacao.png,Baterias de acumuladores para o sistema de iluminação de emergência
+images/54_balizamento.png,Ponto de iluminação de emergência tipo balizamento
+images/55_motogerador.png,Grupo moto-gerador
+images/56_central_iluminacao.png,Central do sistema de iluminação de emergência
+images/57_central_glp.png,Central predial de glp ou gás natural
+images/58_vaso_pressao.png,Vaso sobre pressão
+images/59_direcao_fuga.png,Direção do fluxo da rota de fuga
+images/60_saida_fuga.png,Saída final da rota de fuga
+images/61_chave_secundaria.png,Chave elétrica secundária
+images/62_chave_principal.png,Chave elétrica principal
+images/63_quadro_luz.png,Quadro de distribuição de luz (QDL)
+images/64_para_raio.png,Para-Raio
+images/65_antipanico.png,Barra Antipânico
+images/66_porta60.png,Porta corta fogo P-60
+images/67_porta90.png,Porta corta fogo P-90
+images/68_porta120.png,Porta corta fogo P-120
+images/69_corta_fogo.png,Paredes corta fogo
+images/70_compartimentacao.png,Paredes de compartimentação
+images/71_comum.png,Parede comum
+images/72_divisoria.png,Divisórias leves
+images/73_elevador_montacarga.png,Elevador monta carga
+images/74_simples.png,Elevador simples
+images/75_elevador_emergencia.png,Elevador de emergência
+images/76_acesso_viatura.png,Acesso de viatura na edificação ou área de risco
+images/77_acesso_guarnicao.png,Acesso de guarnição à edificação ou área de risco
+images/78_equipamentos.png,Equipamentos a prova de explosão
+images/79_radioativos.png,Radioativos
+images/80_toxicos.png,Tóxicos
+images/81_corrosivos.png,Corrosivos
+images/82_explosivos.png,Explosivo
+images/83_combustivel.png,Combustível
+images/84_comburente.png,Comburente
