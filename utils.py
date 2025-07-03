@@ -134,7 +134,16 @@ def prepare_flashcard_df(
     )
 
 
-def get_question():
+def initialize_hard_questions_only():
+    """Inicializa uma fila apenas com os símbolos marcados como difíceis"""
+    if hasattr(st.session_state, 'hard_symbols_this_session') and len(st.session_state.hard_symbols_this_session) > 0:
+        # Criar fila apenas com IDs dos símbolos difíceis em ordem aleatória
+        hard_question_ids = st.session_state.hard_symbols_this_session.copy()
+        random.shuffle(hard_question_ids)
+        st.session_state.question_queue = hard_question_ids
+        print(f"Inicializada fila com {len(hard_question_ids)} símbolos difíceis")  # Debug
+    else:
+        st.session_state.question_queue = []
     """Função mantida para compatibilidade - usa a nova implementação"""
     due_questions = get_due_flashcards(st.session_state.flashcards_df)
     # Randomizar a ordem a cada chamada
