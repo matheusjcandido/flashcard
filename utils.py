@@ -89,12 +89,8 @@ def initialize_question_queue():
 
 def get_next_question():
     """Retorna a próxima questão da fila randomizada"""
-    # Se a fila estiver vazia, reinicializar com TODOS os flashcards
+    # Se a fila estiver vazia, não há mais questões
     if not hasattr(st.session_state, 'question_queue') or len(st.session_state.question_queue) == 0:
-        initialize_question_queue()
-    
-    # Se ainda estiver vazia após inicialização, não há questões
-    if len(st.session_state.question_queue) == 0:
         return None
     
     # Pegar o próximo ID da fila
@@ -144,12 +140,6 @@ def initialize_hard_questions_only():
         print(f"Inicializada fila com {len(hard_question_ids)} símbolos difíceis")  # Debug
     else:
         st.session_state.question_queue = []
-    """Função mantida para compatibilidade - usa a nova implementação"""
-    due_questions = get_due_flashcards(st.session_state.flashcards_df)
-    # Randomizar a ordem a cada chamada
-    due_questions_shuffled = due_questions.sample(frac=1).reset_index(drop=True) if not due_questions.empty else due_questions
-    for i, row in due_questions_shuffled.iterrows():
-        yield i, row
 
 
 def search(text_search: str, df: pd.DataFrame) -> Callable:
