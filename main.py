@@ -13,6 +13,7 @@ from utils import (
     load_all_flashcards,
     save_flashcards,
     initialize_question_queue,
+    initialize_hard_questions_only,
 )
 
 # -------------- app config ---------------
@@ -45,6 +46,14 @@ if "session_stats" not in st.session_state:
         "hard": 0
     }
 
+# Lista para rastrear IDs dos símbolos marcados como difíceis nesta sessão
+if "hard_symbols_this_session" not in st.session_state:
+    st.session_state.hard_symbols_this_session = []
+
+# Tipo de sessão (completa ou apenas difíceis)
+if "session_type" not in st.session_state:
+    st.session_state.session_type = "complete"  # "complete" ou "hard_only"
+
 # Inicializar contagem total de questões disponíveis
 if "total_due_questions" not in st.session_state:
     # Usar TODOS os flashcards em cada sessão (84 símbolos)
@@ -74,16 +83,20 @@ def reset_answer_state():
     st.session_state.show_answer = False
 
 
-def update_session_stats(difficulty: str):
+def update_session_stats(difficulty: str, symbol_id: int):
     """Atualiza as estatísticas da sessão"""
     st.session_state.session_stats["answered"] += 1
     st.session_state.session_stats[difficulty] += 1
+    
+    # Se marcado como difícil, adicionar à lista de símbolos difíceis desta sessão
+    if difficulty == "hard" and symbol_id not in st.session_state.hard_symbols_this_session:
+        st.session_state.hard_symbols_this_session.append(symbol_id)
 
 
 def reset_session():
     """Reinicia toda a sessão de estudo"""
     # Limpar os estados da sessão
-    for key in ['question_queue', 'show_answer', 'current_question_id', 'session_stats', 'total_due_questions']:
+    for key in ['question_queue', 'show_answer', 'current_question_id', 'session_stats', 'total_due_questions', 'hard_symbols_this_session', 'session_type']:
         if key in st.session_state:
             del st.session_state[key]
     
@@ -96,22 +109,64 @@ def reset_session():
         "hard": 0
     }
     
+    # Reinicializar outros estados
+    st.session_state.hard_symbols_this_session = []
+    st.session_state.session_type = "complete"
+    st.session_state.show_answer = False
+    st.session_state.current_question_id = None
+    
     # Reinicializar contagem total com TODOS os flashcards
     st.session_state.total_due_questions = len(st.session_state.flashcards_df)
     st.session_state.session_stats["total_questions"] = st.session_state.total_due_questions
-    
-    # Reinicializar outros estados
-    st.session_state.show_answer = False
-    st.session_state.current_question_id = None
     
     # Inicializar nova fila de questões randomizada
     initialize_question_queue()
 
 
+def start_hard_only_session():
+    """Inicia uma sessão apenas com os símbolos marcados como difíceis"""
+    if len(st.session_state.hard_symbols_this_session) == 0:
+        st.warning("Nenhum símbolo foi marcado como difícil nesta sessão!")
+        return
+    
+    # Limpar estados atuais (exceto hard_symbols_this_session)
+    for key in ['question_queue', 'show_answer', 'current_question_id', 'session_stats', 'total_due_questions']:
+        if key in st.session_state:
+            del st.session_state[key]
+    
+    # Configurar para sessão apenas difíceis
+    st.session_state.session_type = "hard_only"
+    st.session_state.show_answer = False
+    st.session_state.current_question_id = None
+    
+    # Reinicializar estatísticas
+    st.session_state.session_stats = {
+        "total_questions": len(st.session_state.hard_symbols_this_session),
+        "answered": 0,
+        "easy": 0,
+        "medium": 0,
+        "hard": 0
+    }
+    
+    st.session_state.total_due_questions = len(st.session_state.hard_symbols_this_session)
+    
+    # Inicializar fila apenas com símbolos difíceis
+    initialize_hard_questions_only()
+
+
 # ---------------- Main page ----------------
 
 st.markdown("## 🔥 Revisão de Símbolos de Segurança")
+
+# Mostrar tipo de sessão
+if st.session_state.session_type == "hard_only":
+    st.markdown("### 🎯 **Sessão: Apenas Símbolos Difíceis**")
+    st.info(f"Revisando {len(st.session_state.hard_symbols_this_session)} símbolos marcados como difíceis na sessão anterior.")
+else:
+    st.markdown("### 📚 **Sessão: Todos os Símbolos**")
+
 st.markdown("---")
+
 # Mostrar barra de progresso e estatísticas
 if st.session_state.total_due_questions > 0:
     progress = st.session_state.session_stats["answered"] / st.session_state.session_stats["total_questions"]
@@ -178,7 +233,7 @@ try:
 
         if next_appearance is not None and difficulty_selected is not None:
             update_next_appearance(current_row[ID], next_appearance)
-            update_session_stats(difficulty_selected)
+            update_session_stats(difficulty_selected, current_row[ID])
             
             # Remover a questão atual da fila e resetar o estado da resposta
             if len(st.session_state.question_queue) > 0:
@@ -218,7 +273,6 @@ try:
             st.metric("😰 Difícil", f"{hard_count} ({hard_pct:.1f}%)")
         
         # Gráfico de barras das estatísticas
-        import pandas as pd
         chart_data = pd.DataFrame({
             'Dificuldade': ['Fácil', 'Médio', 'Difícil'],
             'Quantidade': [easy_count, medium_count, hard_count],
@@ -240,23 +294,34 @@ try:
         else:
             st.info("💪 Continue praticando! A repetição é a chave do aprendizado.")
         
-        # Botão para nova sessão
+        # Informação sobre símbolos difíceis
+        if len(st.session_state.hard_symbols_this_session) > 0:
+            st.markdown("### 🎯 Símbolos que Precisam de Mais Atenção")
+            st.warning(f"Você marcou **{len(st.session_state.hard_symbols_this_session)} símbolos** como difíceis nesta sessão.")
+            st.info("💡 **Dica:** Pratique apenas esses símbolos para melhorar mais rapidamente!")
+        
+        # Botões para próximas ações
         st.markdown("---")
-        if st.button("🔄 Iniciar Nova Sessão de Estudo", use_container_width=True, key="new_session_btn"):
-            reset_session()
-            st.rerun()
+        st.markdown("### 🚀 Próximos Passos")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Botão para estudar apenas os difíceis (só aparece se houver símbolos difíceis)
+            if len(st.session_state.hard_symbols_this_session) > 0:
+                if st.button("🎯 Estudar Apenas os Difíceis", use_container_width=True, key="hard_only_btn", type="secondary"):
+                    start_hard_only_session()
+                    st.rerun()
+            else:
+                st.info("🎉 Nenhum símbolo foi marcado como difícil!")
+        
+        with col2:
+            # Botão para nova sessão completa
+            if st.button("🔄 Iniciar Nova Sessão Completa", use_container_width=True, key="new_session_btn", type="primary"):
+                reset_session()
+                st.rerun()
             
 except FileNotFoundError:
     st.error("Erro: Verifique se as imagens estão na pasta 'images' e se o arquivo 'database.csv' está no diretório correto.")
 except Exception as e:
     st.error(f"Erro ao carregar flashcard: {str(e)}")
-
-
-with tab2:
-    st.info("A funcionalidade de adicionar novos flashcards foi desativada nesta versão.")
-
-with tab3:
-    st.info("A funcionalidade de busca foi desativada nesta versão.")
-
-with tab4:
-    st.info("A funcionalidade de visualizar todos os flashcards foi desativada nesta versão.")
